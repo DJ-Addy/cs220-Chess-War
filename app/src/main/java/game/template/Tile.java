@@ -11,7 +11,7 @@ public abstract class Tile {
     private static Map<Integer, EmptyTile> createAllPossibleEmptyTiles() {
        final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
 
-       for (int i = 0; i < 64; i++) {
+       for (int i = 0; i < BoardUtil.NumTiles; i++) {
            emptyTileMap.put(i, new EmptyTile(i));
        }
        return ImmutableMap.copyOf(emptyTileMap);
@@ -20,7 +20,7 @@ public abstract class Tile {
     public static Tile createTile(final int tileCoordinate, final ChessPiece piece) {
         return piece != null ? new OccupiedTile(tileCoordinate, piece) : EmptyTileCache.get(tileCoordinate);
     }
-    private Tile(int tileCoordinate) {
+    private Tile(final int tileCoordinate) {
         this.tileCoordinate = tileCoordinate;
     }
 
@@ -47,7 +47,7 @@ public abstract class Tile {
     public static final class OccupiedTile extends Tile {
         private final ChessPiece pieceOnTile;
 
-        private OccupiedTile(int tileCoordinate, ChessPiece pieceOnTile) {
+        private OccupiedTile(int tileCoordinate,final ChessPiece pieceOnTile) {
             super(tileCoordinate);
             this.pieceOnTile = pieceOnTile;
         }
