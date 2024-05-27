@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+//need to rebuild the project with tiles, chesspiece, legal moves for each piece, and board
 public class App extends Application
 {
     private static final int SIZE = 8;
@@ -91,7 +92,7 @@ public class App extends Application
         scene.getStylesheets().add(stylesheet);
 
         // set title and scene and show to the user
-        primaryStage.setTitle("GAME TEMPLATE");
+        primaryStage.setTitle("CHESS WAR");
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -236,6 +237,16 @@ public class App extends Application
         menuItem.setOnAction(event -> action.run());
         menu.getItems().add(menuItem);
     }
+
+    // private void SetupChessBoard(){
+    //     // clear the board
+    //     clearBoard();
+    //     // place the pieces
+    //    //place white pieces
+    //    for(int row; row <= SIZE; row++){
+    //        placePiece(Player.WHITE, ChessPiece.PAWN, row, 1);
+    //    }
+    // }
 
     public static void main(String[] args) 
     {
