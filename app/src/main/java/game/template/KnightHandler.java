@@ -52,19 +52,19 @@ public class KnightHandler extends ChessPiece {
     }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.FIRST_COLUMN[currentPosition] && (candidatePos == -17 || candidatePos == -10 || candidatePos == 6 || candidatePos == 15);
+        return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -17 || candidatePos == -10 || candidatePos == 6 || candidatePos == 15);
     }
 
     private static boolean isSecondColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.SECOND_COLUMN[currentPosition] && (candidatePos == -10 || candidatePos == 6);
+        return BoardUtil.SecondColumn[currentPosition] && (candidatePos == -10 || candidatePos == 6);
     }
 
     private static boolean isSeventhColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.SEVENTH_COLUMN[currentPosition] && (candidatePos == -6 || candidatePos == 10);
+        return BoardUtil.SeventhColumn[currentPosition] && (candidatePos == -6 || candidatePos == 10);
     }
 
     private static boolean isEighthColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.EIGHTH_COLUMN[currentPosition] && (candidatePos == -15 || candidatePos == -6 || candidatePos == 10 || candidatePos == 17);
+        return BoardUtil.EigthColumn[currentPosition] && (candidatePos == -15 || candidatePos == -6 || candidatePos == 10 || candidatePos == 17);
     }
 
 }

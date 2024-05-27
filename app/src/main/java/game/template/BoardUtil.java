@@ -26,10 +26,10 @@ public class BoardUtil {
         return column;
         }
 
-    public static final boolean[] FIRST_COLUMN = initColumn(0);
-    public static final boolean[] SECOND_COLUMN = initColumn(1);
-    public static final boolean[] SEVENTH_COLUMN = initColumn(6);
-    public static final boolean[] EIGHTH_COLUMN = initColumn(7);
+    public static final boolean[] FirstColumn = initColumn(0);
+    public static final boolean[] SecondColumn = initColumn(1);
+    public static final boolean[] SeventhColumn = initColumn(6);
+    public static final boolean[] EigthColumn = initColumn(7);
     public static final boolean[] SECOND_ROW = null;
     public static final boolean[] SEVENTH_ROW = null;
 

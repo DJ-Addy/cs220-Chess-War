@@ -53,11 +53,11 @@ public class QueenHandler {
     }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.FIRST_COLUMN[currentPosition] && (candidatePos == -9 ||candidatePos == -1 ||candidatePos == 7);
+        return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -9 ||candidatePos == -1 ||candidatePos == 7);
     }
 
     private static boolean isEighthColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.EIGHTH_COLUMN[currentPosition] && (candidatePos == -7 || candidatePos == 9 || candidatePos == 1);
+        return BoardUtil.EigthColumn[currentPosition] && (candidatePos == -7 || candidatePos == 9 || candidatePos == 1);
     }
 }
 

@@ -18,16 +18,16 @@ public class PawnHandler extends ChessPiece{
     public List<Move> LegalMovesList( final Board board) {
         
         final List<Moves> legalMoves = new ArrayList<>();
-
+        //TODO: HANDLE PAWN PROMOTION
         for (final int currentCandidate : CandidateMoveCoordinates) {
             final int candidateDestinationCoordinate = this.piecePosition + (this.playerColor.getDirection() * currentCandidate);
 
             if(!BoardUtil.isValidTile(candidateDestinationCoordinate)) {
                 continue;
             }
-            if(currentCandidate == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
+        if(currentCandidate == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
                 legalMoves.add(new DevelopingMove(board, this, candidateDestinationCoordinate));
-            }else if(currentCandidate == 16 && this.isFirstMove() && 
+        }else if(currentCandidate == 16 && this.isFirstMove() && 
             (BoardUtil.SECOND_ROW(this.piecePosition)&& 
             this.getPiecePlayer().isBlack())|| 
             (BoardUtil.SEVENTH_ROW(this.piecePosition)&& 
@@ -38,19 +38,25 @@ public class PawnHandler extends ChessPiece{
                     legalMoves.add(new DevelopingMove(board, this, candidateDestinationCoordinate));
                 }
         }else if(currentCandidate == 7 && 
-                !((BoardUtil.EIGHTH_COLUMN[this.piecePosition] && this.playerColor.isWhite() || 
-                (BoardUtil.FIRST_COLUMN[this.piecePosition] && this.playerColor.isBlack())))) {
+                !((BoardUtil.EigthColumn[this.piecePosition] && this.playerColor.isWhite() || 
+                (BoardUtil.FirstColumn[this.piecePosition] && this.playerColor.isBlack())))) {
             if(board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
                 final ChessPiece pieceAtDestination = board.getTile(candidateDestinationCoordinate).getPiece();
                 if(this.playerColor != pieceAtDestination.getPiecePlayer()) {
-                    
+                    //TODO: handle attacking into a pawn promotion
                     legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                 }
             }
-
-
-        }else if(currentCandidate == 9){
-
+        }else if(currentCandidate == 9 &&
+            !((BoardUtil.FirstColumn[this.piecePosition] && this.playerColor.isWhite() || 
+            (BoardUtil.EigthColumn[this.piecePosition] && this.playerColor.isBlack())))){
+            if(board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
+                    final ChessPiece pieceAtDestination = board.getTile(candidateDestinationCoordinate).getPiece();
+                    if(this.playerColor != pieceAtDestination.getPiecePlayer()) {
+                        //TODO: handle attacking into a pawn promotion
+                        legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                    }
+            }
         }
      }
         return ImutableList.copyOf(legalMoves);

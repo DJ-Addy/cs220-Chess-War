@@ -53,11 +53,11 @@ public class RookHandler extends ChessPiece{
     }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.FIRST_COLUMN[currentPosition] && (candidatePos == -1);
+        return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -1);
     }
 
     private static boolean isEighthColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.EIGHTH_COLUMN[currentPosition] && (candidatePos == 1);
+        return BoardUtil.EigthColumn[currentPosition] && (candidatePos == 1);
     }
 }
 

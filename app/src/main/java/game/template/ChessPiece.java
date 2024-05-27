@@ -17,6 +17,12 @@ public abstract class ChessPiece{
         //TODO: more work here!!!
         this.isFirstMove = false;
     }
+
+    public int getPiecePosition()
+    {
+        return this.piecePosition;
+    }
+
     public Player getPiecePlayer()
     {
         return this.playerColor;
