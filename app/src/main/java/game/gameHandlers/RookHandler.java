@@ -1,24 +1,23 @@
-package main.java.game.template;
-
-
-import java.util.List;
-import java.util.ArrayList;
+package gameHandlers;
+import java.util.*;
+import gameHandlers.Move.*;
+import gameHandlers.Board.*;
+import gameHandlers.BoardUtil.*;
 import com.google.common.collect.ImmutableList;
 
-
-public class BishopHandler extends ChessPiece{
+public class RookHandler extends ChessPiece{
     
-    private final static int[] CandidateMoveCoordinates = {-9, -7, 7, 9};
+    private final static int[] CandidateMoveCoordinates = {-8, -1, 1, 8};
 
-    BishopHandler(final int piecePosition, final Player playerColor, ImageView pieceImage)
+    public RookHandler(final int piecePosition, final Player playerColor)
     {
-        super(piecePosition, playerColor, pieceImage);
+        super(piecePosition, playerColor, true, PieceType.ROOK);
     }
 
     @Override
     public List<Move> LegalMovesList(Board board) {
         
-        final List<Moves> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>();
         //loop through the candidate vectors
         for (final int currentCandidate : CandidateMoveCoordinates) {
             int candidateDestinationCoordinate = this.piecePosition;
@@ -29,7 +28,7 @@ public class BishopHandler extends ChessPiece{
                 isEighthColumnEdgeCase(candidateDestinationCoordinate, currentCandidate)){
                     break;
                 }
-                //allows the bishop to move diagonally using the candidate vectors
+                //allows the rook to move side to side and up and down using the candidate vectors
                 candidateDestinationCoordinate += currentCandidate;
                 if (BoardUtil.isValidTile(candidateDestinationCoordinate)) {
                     final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
@@ -51,14 +50,20 @@ public class BishopHandler extends ChessPiece{
                 }
             }
         }
-        return ImutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return PieceType.ROOK.toString();
     }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -9 || candidatePos == 7);
+        return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -1);
     }
 
     private static boolean isEighthColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.EigthColumn[currentPosition] && (candidatePos == -7 || candidatePos == 9);
+        return BoardUtil.EigthColumn[currentPosition] && (candidatePos == 1);
     }
 }
+

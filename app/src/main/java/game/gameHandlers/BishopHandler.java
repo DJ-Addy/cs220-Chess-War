@@ -1,33 +1,36 @@
-package main.java.game.template;
-
-import java.util.List;
-import java.util.ArrayList;
+package gameHandlers;
+import java.util.*;
+import gameHandlers.Move.*;
+import gameHandlers.Board.*;
+import gameHandlers.BoardUtil.*;
 import com.google.common.collect.ImmutableList;
 
-public class QueenHandler {
- 
-    private final static int[] CandidateMoveCoordinates = {-9,-8,-7,-1,1,7,8, 9};
 
-    QueenHandler(final int piecePosition, final Player playerColor, ImageView pieceImage)
+public class BishopHandler extends ChessPiece 
+{
+    
+    private final static int[] CandidateMoveCoordinates = {-9, -7, 7, 9};
+
+    public BishopHandler(final int piecePosition, final Player playerColor)
     {
-        super(piecePosition, playerColor, pieceImage);
+        super(piecePosition, playerColor, true, PieceType.BISHOP);
     }
 
     @Override
     public List<Move> LegalMovesList(Board board) {
         
-        final List<Moves> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>();
         //loop through the candidate vectors
         for (final int currentCandidate : CandidateMoveCoordinates) {
             int candidateDestinationCoordinate = this.piecePosition;
             
-            //while the diagonal,horizonal,vertical move is valid
+            //while the digaonal move is valid
             while(BoardUtil.isValidTile(candidateDestinationCoordinate)) {
                 if(isFirstColumnEdgeCase(candidateDestinationCoordinate, currentCandidate) || 
                 isEighthColumnEdgeCase(candidateDestinationCoordinate, currentCandidate)){
                     break;
                 }
-                //allows the Queen to move diagonally,horizonally,vertically using the candidate vectors
+                //allows the bishop to move diagonally using the candidate vectors
                 candidateDestinationCoordinate += currentCandidate;
                 if (BoardUtil.isValidTile(candidateDestinationCoordinate)) {
                     final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
@@ -43,21 +46,25 @@ public class QueenHandler {
                         //TODO
                         legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
-                        //breaks when either white or black piece is encountered on the diagonal,horizonal,vertical
+                        //breaks when either white or black piece is encountered on the diagonal path
                         break;
                     }
                 }
             }
         }
-        return ImutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return pieceType.BISHOP.toString();
     }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -9 ||candidatePos == -1 ||candidatePos == 7);
+        return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -9 || candidatePos == 7);
     }
 
     private static boolean isEighthColumnEdgeCase(final int currentPosition, final int candidatePos) {
-        return BoardUtil.EigthColumn[currentPosition] && (candidatePos == -7 || candidatePos == 9 || candidatePos == 1);
+        return BoardUtil.EigthColumn[currentPosition] && (candidatePos == -7 || candidatePos == 9);
     }
 }
-

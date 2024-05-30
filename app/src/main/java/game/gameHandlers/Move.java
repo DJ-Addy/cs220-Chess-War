@@ -1,4 +1,5 @@
-package main.java.game.template;
+package gameHandlers;
+import java.util.*;
 
 public abstract class Move {
     

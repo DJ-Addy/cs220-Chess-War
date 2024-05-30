@@ -1,8 +1,10 @@
-package game.template;
+package gameHandlers;
+import java.util.*;
 
 public enum Player
 {
-    WHITE {
+    WHITE 
+    {
     @Override
     public int getDirection()
         {

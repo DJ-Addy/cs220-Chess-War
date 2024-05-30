@@ -1,7 +1,8 @@
-package main.java.game.template;
-
-import java.util.List;
-import java.util.ArrayList;
+package gameHandlers;
+import java.util.*;
+import gameHandlers.Move.*;
+import gameHandlers.Board.*;
+import gameHandlers.BoardUtil.*;
 import com.google.common.collect.ImmutableList;
 
 
@@ -9,15 +10,15 @@ public class PawnHandler extends ChessPiece{
     
     private final static int[] CandidateMoveCoordinates = {8, 16, 7, 9};
 
-    PawnHandler(final int piecePosition, final Player playerColor, ImageView pieceImage)
+    public PawnHandler(final int piecePosition, final Player playerColor)
     {
-        super(piecePosition, playerColor, pieceImage);
+        super(piecePosition, playerColor, true, PieceType.PAWN);
     }
 
     @Override
     public List<Move> LegalMovesList( final Board board) {
         
-        final List<Moves> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>();
         //TODO: HANDLE PAWN PROMOTION
         for (final int currentCandidate : CandidateMoveCoordinates) {
             final int candidateDestinationCoordinate = this.piecePosition + (this.playerColor.getDirection() * currentCandidate);
@@ -28,9 +29,9 @@ public class PawnHandler extends ChessPiece{
         if(currentCandidate == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
                 legalMoves.add(new DevelopingMove(board, this, candidateDestinationCoordinate));
         }else if(currentCandidate == 16 && this.isFirstMove() && 
-            (BoardUtil.SECOND_ROW(this.piecePosition)&& 
+            (BoardUtil.SecondRow[this.piecePosition]&& 
             this.getPiecePlayer().isBlack())|| 
-            (BoardUtil.SEVENTH_ROW(this.piecePosition)&& 
+            (BoardUtil.SeventhRow[this.piecePosition]&& 
             this.getPiecePlayer().isWhite())) {
                 final int behindCandidateDestinationCoordinate = this.piecePosition + (this.getPiecePlayer().getDirection() * 8);
                 if(!board.getTile(behindCandidateDestinationCoordinate).isTileOccupied() && 
@@ -59,6 +60,10 @@ public class PawnHandler extends ChessPiece{
             }
         }
      }
-        return ImutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
+    }
+    @Override
+    public String toString() {
+        return PieceType.PAWN.toString();
     }
 }

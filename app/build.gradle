@@ -6,6 +6,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    flatDir{
+        dirs 'libs'
+    }
 }
 
 javafx {
@@ -23,7 +26,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'game.template.App'
+    mainClass = 'template.App'
 }
 
 tasks.named('test') {

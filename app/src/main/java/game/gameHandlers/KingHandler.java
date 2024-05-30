@@ -1,21 +1,23 @@
-package main.java.game.template;
-
-import java.util.List;
-import java.util.ArrayList;
+package gameHandlers;
+import java.util.*;
+import gameHandlers.Move.*;
+import gameHandlers.Board.*;
+import gameHandlers.BoardUtil.*;
 import com.google.common.collect.ImmutableList;
+
 
 public class KingHandler extends ChessPiece{
 
     private final static int[] CandidateMoveCoordinates = {-9, -8, -7, -1, 1, 7, 8, 9};
     
-    KingHandler(final int piecePosition, final Player playerColor, ImageView pieceImage)
+    public KingHandler(final int piecePosition, final Player playerColor)
     {
-        super(piecePosition, playerColor, pieceImage);
+        super(piecePosition, playerColor, true, PieceType.KING);
     }
 
     @Override
     public List<Move> LegalMovesList(Board board) {
-        final List<Moves> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>();
 
         for (final int currentCandidate : CandidateMoveCoordinates) {
             final int candidateDestinationCoordinate = this.piecePosition + currentCandidate;
@@ -42,7 +44,12 @@ public class KingHandler extends ChessPiece{
 
         }
 
-        return ImutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return PieceType.KING.toString();
     }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {

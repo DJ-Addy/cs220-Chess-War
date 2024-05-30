@@ -1,21 +1,64 @@
-package main.java.game.template;
-import java.util.List;
-import java.util.Map;
+package gameHandlers;
+import java.util.*;
 import com.google.common.collect.ImmutableList;
+
+
 public class Board {
     
     private final List<Tile> gameBoard;
+    private final List<ChessPiece> whitePieces;
+    private final List<ChessPiece> blackPieces;
+
+    //implement players classes 
+    // private final Player whitePlayer;
+    // private final Player blackPlayer;
 
     private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
-        this.whitePlayer = builder.whitePlayer;
-        this.blackPlayer = builder.blackPlayer;
-        final List<ChessPiece> whitePieces = calculateActivePieces(this.gameBoard, Player.WHITE);
-        final List<ChessPiece> blackPieces = calculateActivePieces(this.gameBoard, Player.BLACK);
+        this.whitePieces = calculateActivePieces(this.gameBoard, Player.WHITE);
+        this.blackPieces = calculateActivePieces(this.gameBoard, Player.BLACK);
+        final List<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
+        final List<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBoard = new StringBuilder();
+        for (int i = 0; i < BoardUtil.NumTiles; i++) {
+            final String tileText = this.gameBoard.get(i).toString();
+            stringBoard.append(String.format("%3s", tileText));
+            if((i+1) % BoardUtil.NumTilesPerRow == 0) {
+                stringBoard.append("\n");
+            }
+        }
+        return stringBoard.toString();
+    }
+
+
+
+    private List<Move> calculateLegalMoves(final List<ChessPiece> pieces) {
+        final List<Move> legalMoves = new ArrayList<>();
+        for (final ChessPiece piece : pieces) {
+            legalMoves.addAll(piece.LegalMovesList(this));
+        }
+        return ImmutableList.copyOf(legalMoves);
+    }
+
+    private static List<ChessPiece> calculateActivePieces(final List<Tile> gameBoard, final Player playerColor) {
+        final List<ChessPiece> activePieces = new ArrayList<>();
+        for (final Tile tile : gameBoard) {
+            if(tile.isTileOccupied()) {
+                final ChessPiece piece = tile.getPiece();
+                if(piece.getPiecePlayer()==playerColor) {
+                    activePieces.add(piece);
+                }
+            }
+        }
+        return ImmutableList.copyOf(activePieces);
     }
 
     public Tile getTile(final int tileCoordinate) {
-        return null;
+        return gameBoard.get(tileCoordinate);
     }
 
     public static Board createStandardBoard(){
@@ -61,7 +104,7 @@ public class Board {
         return builder.build();
     }
 
-    private static List<Tiles> createGameBoard(final Builder builder) {
+    private static List<Tile> createGameBoard(final Builder builder) {
         final Tile[] tiles = new Tile[BoardUtil.NumTiles];
         for (int i = 0; i < BoardUtil.NumTiles; i++) {
 
@@ -71,17 +114,14 @@ public class Board {
     }
 
     public static class Builder {
-        public Builder setPiece(final ChessPiece piece) {
-            return this;
-        }
         Map<Integer, ChessPiece> boardConfig;
         
         Player nextMoveMaker;
-        Public Builder(){
-
+        public Builder(){
+            this.boardConfig = new HashMap<>();
         }
 
-        public Builder setPiece(final Player piece) {
+        public Builder setPiece(final ChessPiece piece) {
             this.boardConfig.put(piece.getPiecePosition(), piece);
             return this;
         }

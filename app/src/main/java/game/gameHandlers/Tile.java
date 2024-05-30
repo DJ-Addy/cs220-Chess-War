@@ -1,6 +1,5 @@
-package main.java.game.template;
-import java.util.Map;
-import game.template.ChessPiece;
+package gameHandlers;
+import java.util.*;
 import com.google.common.collect.ImmutableMap;
 
 public abstract class Tile {
@@ -32,6 +31,10 @@ public abstract class Tile {
         private EmptyTile(int coordinate) {
             super(coordinate);
         }
+        @Override
+        public String toString() {
+            return "-";
+        }
 
         @Override
         public boolean isTileOccupied() {
@@ -50,6 +53,10 @@ public abstract class Tile {
         private OccupiedTile(int tileCoordinate,final ChessPiece pieceOnTile) {
             super(tileCoordinate);
             this.pieceOnTile = pieceOnTile;
+        }
+        @Override
+        public String toString() {
+            return getPiece().getPiecePlayer().isBlack() ? getPiece().toString().toLowerCase() : getPiece().toString();
         }
 
         @Override
