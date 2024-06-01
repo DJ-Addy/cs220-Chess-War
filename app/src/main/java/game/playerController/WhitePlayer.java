@@ -10,6 +10,7 @@ import gameHandlers.Move;
 import gameHandlers.Player;
 import gameHandlers.QueenHandler;
 import gameHandlers.RookHandler;
+import gameHandlers.Tile.*;
 
 public class WhitePlayer extends PlayerHandler {
     public WhitePlayer(final Board board, final List<Move> whiteStandardLegalMoves, final List<Move> blackStandardLegalMoves) {
