@@ -24,166 +24,147 @@ import javafx.stage.Stage;
 
 //extends Application
 //need to rebuild the project with tiles, chesspiece, legal moves for each piece, and board
-public class App 
+public class App extends Application
 {
-    // private static final int SIZE = 8;
-    // // this is the size of each square in the chess or checkers board
-    // // this must be kept in sync with the size of the images, and the
-    // // size of the squares in the css file
-    // private static final int SQUARE_SIZE = 70;
-    // private VBox root;
-    // // using StackPane so that they can hold a rectangle and an image
-    // // we use the rectangle to color the squares
-    // // and the image to place the pieces
-    // private StackPane[][] grid = new StackPane[SIZE][SIZE];
+    private static final int SIZE = 8;
+    // this is the size of each square in the chess or checkers board
+    // this must be kept in sync with the size of the images, and the
+    // size of the squares in the css file
+    private static final int SQUARE_SIZE = 70;
+    private VBox root;
+    // using StackPane so that they can hold a rectangle and an image
+    // we use the rectangle to color the squares
+    // and the image to place the pieces
+    private StackPane[][] grid = new StackPane[SIZE][SIZE];
 
-    // @Override
-    // public void start(Stage primaryStage) throws Exception
-    // {
-    //     root = new VBox();
+    @Override
+    public void start(Stage primaryStage) throws Exception
+    {
+        root = new VBox();
 
-    //     root.getChildren().add(createMenuBar());
+        root.getChildren().add(createMenuBar());
 
-    //     GridPane gridPane = new GridPane();
-    //     // preferred size of the gridpane
-    //     gridPane.setPrefSize(SQUARE_SIZE * 8, SQUARE_SIZE * 8);
+        GridPane gridPane = new GridPane();
+        // preferred size of the gridpane
+        gridPane.setPrefSize(SQUARE_SIZE * 8, SQUARE_SIZE * 8);
         
-    //     root.getChildren().add(gridPane);
+        root.getChildren().add(gridPane);
 
-    //     // loosely based on https://stackoverflow.com/questions/69339314/how-can-i-draw-over-a-gridpane-of-rectangles-with-an-image-javafx
-    //     for (int row = 0; row < SIZE; row++)
-    //     {
-    //         for (int col = 0; col < SIZE; col++)
-    //         {
-    //             Rectangle rect = new Rectangle(SQUARE_SIZE, SQUARE_SIZE);
+        // loosely based on https://stackoverflow.com/questions/69339314/how-can-i-draw-over-a-gridpane-of-rectangles-with-an-image-javafx
+        for (int row = 0; row < SIZE; row++)
+        {
+            for (int col = 0; col < SIZE; col++)
+            {
+                Rectangle rect = new Rectangle(SQUARE_SIZE, SQUARE_SIZE);
 
-    //             if ((row + col) % 2 == 0) { 
-    //                 rect.getStyleClass().add("white-square");
-    //             }
-    //             else {
-    //                 rect.getStyleClass().add("black-square");
-    //             }
+                if ((row + col) % 2 == 0) { 
+                    rect.getStyleClass().add("white-square");
+                }
+                else {
+                    rect.getStyleClass().add("black-square");
+                }
                 
-    //             StackPane cell = new StackPane(rect);
+                StackPane cell = new StackPane(rect);
                 
-    //             grid[row][col] = cell;
+                grid[row][col] = cell;
 
-    //             // name each cell with its row and column
-    //             // unsure we'll need this
-    //             cell.setId(row + "-" + col);
+                // name each cell with its row and column
+                // unsure we'll need this
+                cell.setId(row + "-" + col);
 
-    //             // we need to create these extra local final variables
-    //             // I think this has to do with thread safety?
-    //             final int r = row;
-    //             final int c = col;
-    //             // make each cell clickable
-    //             cell.setOnMouseClicked(event -> handleMouseClick(event, r, c));
+                // we need to create these extra local final variables
+                // I think this has to do with thread safety?
+                final int r = row;
+                final int c = col;
+                // make each cell clickable
+                cell.setOnMouseClicked(event -> handleMouseClick(event, r, c));
 
-    //             // finally, put the stackpane into the gridpane
-    //             gridPane.add(cell, col, row);
-    //         }
-    //     }
+                // finally, put the stackpane into the gridpane
+                gridPane.add(cell, col, row);
+            }
+        }
 
-    //     // don't give a width or height to the scene
-    //     // it will figure it out because there's a menu bar
-    //     // plus each square is a fixed size
-    //     Scene scene = new Scene(root);
+        // don't give a width or height to the scene
+        // it will figure it out because there's a menu bar
+        // plus each square is a fixed size
+        Scene scene = new Scene(root);
 
-    //     // add style information
-    //     URL styleURL = getClass().getResource("/style.css");
-    //     String stylesheet = styleURL.toExternalForm();
-    //     scene.getStylesheets().add(stylesheet);
+        // add style information
+        URL styleURL = getClass().getResource("/style.css");
+        String stylesheet = styleURL.toExternalForm();
+        scene.getStylesheets().add(stylesheet);
 
-    //     // set title and scene and show to the user
-    //     primaryStage.setTitle("CHESS WAR");
-    //     primaryStage.setScene(scene);
-    //     primaryStage.show();
+        // set title and scene and show to the user
+        primaryStage.setTitle("CHESS WAR");
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
-    //     // handler for when we click the close button
-    //     primaryStage.setOnCloseRequest(event -> {
-    //         System.out.println("oncloserequest");
-    //     });
+        // handler for when we click the close button
+        primaryStage.setOnCloseRequest(event -> {
+            System.out.println("oncloserequest");
+        });
 
-    // }
+    }
 
-    // private void clearBoard()
-    // {
-    //     // removes all of the images (pieces) from the board
-    //     for (int row = 0; row < SIZE; row++)
-    //     {
-    //         for (int col = 0; col < SIZE; col++)
-    //         {
-    //             grid[row][col].getChildren().removeIf(child -> child instanceof ImageView);
-    //         }
-    //     }
-    // }
+    private void clearBoard()
+    {
+        // removes all of the images (pieces) from the board
+        for (int row = 0; row < SIZE; row++)
+        {
+            for (int col = 0; col < SIZE; col++)
+            {
+                grid[row][col].getChildren().removeIf(child -> child instanceof ImageView);
+            }
+        }
+    }
 
-    // private void drawBoard1()
-    // {
-    //     clearBoard();
-    //     placePiece(Player.WHITE, ChessPiece.PAWN, 1, 0);
-    //     placePiece(Player.WHITE, ChessPiece.PAWN, 2, 0);
-    //     placePiece(Player.BLACK, ChessPiece.ROOK, 3, 0);
-    //     placePiece(Player.BLACK, ChessPiece.QUEEN, 4, 0);
-    // }
-
-    // private void drawBoard2()
-    // {
-    //     clearBoard();
-    //     placePiece(Player.WHITE, ChessPiece.PAWN, 1, 4);
-    //     placePiece(Player.WHITE, ChessPiece.PAWN, 2, 4);
-    //     placePiece(Player.BLACK, ChessPiece.ROOK, 3, 4);
-    //     placePiece(Player.BLACK, ChessPiece.QUEEN, 4,4);
-    // }
-
-    // private void setKeyboardHandler()
-    // {
-    //     // add this to the root which is a VBox
-    //     root.setOnKeyPressed(event -> {
-    //         System.out.println("Key pressed: " + event.getCode());
-    //         switch (event.getCode())
-    //         {
-    //             // check for the key input
-    //             case ESCAPE:
-    //                 // remove focus from the textfields by giving it to the root VBox
-    //                 root.requestFocus();
-    //                 System.out.println("You pressed ESC key");
-    //                 break;
-    //             case ENTER:
-    //                 System.out.println("You pressed ENTER key");
-    //                 break;
-    //             default:
-    //                 System.out.println("you typed key: " + event.getCode());
-    //                 break;
+    private void setKeyboardHandler()
+    {
+        // add this to the root which is a VBox
+        root.setOnKeyPressed(event -> {
+            System.out.println("Key pressed: " + event.getCode());
+            switch (event.getCode())
+            {
+                // check for the key input
+                case ESCAPE:
+                    // remove focus from the textfields by giving it to the root VBox
+                    root.requestFocus();
+                    System.out.println("You pressed ESC key");
+                    break;
+                case ENTER:
+                    System.out.println("You pressed ENTER key");
+                    break;
+                default:
+                    System.out.println("you typed key: " + event.getCode());
+                    break;
                 
-    //         }
-    //     });
-    // }
+            }
+        });
+    }
 
-    // private void handleMouseClick(MouseEvent event, int row, int col)
-    // {
-    //     System.out.println("Mouse clicked on " + row + ", " + col);
+    private void handleMouseClick(MouseEvent event, int row, int col)
+    {
+        System.out.println("Mouse clicked on " + row + ", " + col);
 
-    //     // I'm just showing off that you can do this
-    //     // the proper way to do this is to have a model class
-    //     // similar to the Board class in Sudoku
-    //     // and then ask the model what piece is at this row/col
-    //     grid[row][col].getChildren().forEach(child -> {
-    //         if (child instanceof ImageView)
-    //         {
-    //             String url = ((ImageView) child).getImage().getUrl();
-    //             String piece = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.'));
+        // I'm just showing off that you can do this
+        // the proper way to do this is to have a model class
+        // similar to the Board class in Sudoku
+        // and then ask the model what piece is at this row/col
+        grid[row][col].getChildren().forEach(child -> {
+            if (child instanceof ImageView)
+            {
+                String url = ((ImageView) child).getImage().getUrl();
+                String piece = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.'));
 
-    //             System.out.println("Image found for piece " + piece);
-    //         }
-    //     });
-    // }
+                System.out.println("Image found for piece " + piece);
+            }
+        });
+    }
 
     // private void placePiece(Player player, ChessPiece piece, int row, int col)
     // {
     //     String imageName = "";
-    //     if (player == Player.WHITE)
-    //     {
+    //     if (){
     //         imageName = "w" + piece.toString().toLowerCase() + ".png";
     //     }
     //     else
@@ -202,54 +183,45 @@ public class App
     //     //image.fitHeightProperty().bind(grid[row][col].heightProperty().subtract(2));
     // }
 
-    // private ImageView loadImage(String name)
-    // {
-    //     return new ImageView(getClass().getResource("/assets/" + name).toExternalForm());
-    // }
+    private ImageView loadImage(String name)
+    {
+        return new ImageView(getClass().getResource("/assets/" + name).toExternalForm());
+    }
 
-    // private MenuBar createMenuBar()
-    // {
-    //     MenuBar menuBar = new MenuBar();
-    // 	menuBar.getStyleClass().add("menubar");
+    private MenuBar createMenuBar()
+    {
+        MenuBar menuBar = new MenuBar();
+    	menuBar.getStyleClass().add("menubar");
 
-    //     //
-    //     // File Menu
-    //     //
-    // 	Menu fileMenu = new Menu("File");
+        //
+        // File Menu
+        //
+    	Menu fileMenu = new Menu("File");
 
-    //     addMenuItem(fileMenu, "Load from file", () -> {
-    //         System.out.println("Load from file");
-    //     });
+        addMenuItem(fileMenu, "Load from file", () -> {
+            System.out.println("Load from file");
+        });
 
-    //     addMenuItem(fileMenu, "board1", () -> {
-    //         drawBoard1();
-    //     });
+        addMenuItem(fileMenu, "board1", () -> {
+            
+        });
 
-    //     addMenuItem(fileMenu, "board2", () -> {
-    //         drawBoard2();
-    //     });
+        addMenuItem(fileMenu, "board2", () -> {
+            
+        });
 
-    //     menuBar.getMenus().add(fileMenu);
+        menuBar.getMenus().add(fileMenu);
 
-    //     return menuBar;
-    // }
+        return menuBar;
+    }
 
-    // private void addMenuItem(Menu menu, String name, Runnable action)
-    // {
-    //     MenuItem menuItem = new MenuItem(name);
-    //     menuItem.setOnAction(event -> action.run());
-    //     menu.getItems().add(menuItem);
-    // }
+    private void addMenuItem(Menu menu, String name, Runnable action)
+    {
+        MenuItem menuItem = new MenuItem(name);
+        menuItem.setOnAction(event -> action.run());
+        menu.getItems().add(menuItem);
+    }
 
-    // // private void SetupChessBoard(){
-    // //     // clear the board
-    // //     clearBoard();
-    // //     // place the pieces
-    // //    //place white pieces
-    // //    for(int row; row <= SIZE; row++){
-    // //        placePiece(Player.WHITE, ChessPiece.PAWN, row, 1);
-    // //    }
-    // // }
 
     public static void main(String[] args) 
     {

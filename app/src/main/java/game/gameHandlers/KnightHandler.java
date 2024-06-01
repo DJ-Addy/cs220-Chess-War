@@ -59,6 +59,11 @@ public class KnightHandler extends ChessPiece {
         return PieceType.KNIGHT.toString();
     }
 
+    @Override
+    public KnightHandler movePiece(Move move) {
+        return new KnightHandler(move.getDestinationCoordinate(), move.getMovedPiece().getPiecePlayer());
+    }
+
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
         return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -17 || candidatePos == -10 || candidatePos == 6 || candidatePos == 15);
     }

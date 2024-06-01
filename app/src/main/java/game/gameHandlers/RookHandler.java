@@ -57,6 +57,10 @@ public class RookHandler extends ChessPiece{
     public String toString() {
         return PieceType.ROOK.toString();
     }
+    @Override
+    public RookHandler movePiece(Move move) {
+        return new RookHandler(move.getDestinationCoordinate(), move.getMovedPiece().getPiecePlayer());
+    }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
         return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -1);

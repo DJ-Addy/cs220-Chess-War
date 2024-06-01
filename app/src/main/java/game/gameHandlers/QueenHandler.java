@@ -60,6 +60,10 @@ public class QueenHandler extends ChessPiece{
     public String toString() {
         return PieceType.QUEEN.toString();
     }
+    @Override
+    public QueenHandler movePiece(Move move) {
+        return new QueenHandler(move.getDestinationCoordinate(), move.getMovedPiece().getPiecePlayer());
+    }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
         return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -9 ||candidatePos == -1 ||candidatePos == 7);

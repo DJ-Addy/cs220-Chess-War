@@ -51,6 +51,10 @@ public class KingHandler extends ChessPiece{
     public String toString() {
         return PieceType.KING.toString();
     }
+    @Override
+    public KingHandler movePiece(Move move) {
+        return new KingHandler(move.getDestinationCoordinate(), move.getMovedPiece().getPiecePlayer());
+    }
 
     private static boolean isFirstColumnEdgeCase(final int currentPosition, final int candidatePos) {
         return BoardUtil.FirstColumn[currentPosition] && (candidatePos == -9 || candidatePos == -1 || candidatePos == 7); 

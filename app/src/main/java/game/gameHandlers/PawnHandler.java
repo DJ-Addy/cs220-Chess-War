@@ -66,4 +66,8 @@ public class PawnHandler extends ChessPiece{
     public String toString() {
         return PieceType.PAWN.toString();
     }
+    @Override
+    public PawnHandler movePiece(Move move) {
+        return new PawnHandler(move.getDestinationCoordinate(), move.getMovedPiece().getPiecePlayer());
+    }
 }

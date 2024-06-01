@@ -1,6 +1,8 @@
 package gameHandlers;
 import java.util.*;
-import com.google.common.collect.ImmutableList;
+import playerController.PlayerHandler;
+import playerController.BlackPlayer;
+import playerController.WhitePlayer;
 
 
 public class Board {
@@ -8,10 +10,11 @@ public class Board {
     private final List<Tile> gameBoard;
     private final List<ChessPiece> whitePieces;
     private final List<ChessPiece> blackPieces;
+    private final PlayerHandler currentPlayer;
 
     //implement players classes 
-    // private final Player whitePlayer;
-    // private final Player blackPlayer;
+    private final WhitePlayer whitePlayerController;
+    private final BlackPlayer blackPlayerController;
 
     private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
@@ -19,6 +22,10 @@ public class Board {
         this.blackPieces = calculateActivePieces(this.gameBoard, Player.BLACK);
         final List<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final List<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
+
+        this.whitePlayerController = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
+        this.blackPlayerController = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
+        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayerController, this.blackPlayerController);
     }
 
     @Override
@@ -34,14 +41,31 @@ public class Board {
         return stringBoard.toString();
     }
 
+    public List<ChessPiece> getWhitePieces() {
+        return this.whitePieces;
+    }
+    public List<ChessPiece> getBlackPieces() {
+        return this.blackPieces;
+    }
 
+    public PlayerHandler whitePlayer() {
+        return this.whitePlayerController;
+    }
+
+    public PlayerHandler blackPlayer() {
+        return this.blackPlayerController;
+    }
+
+    public PlayerHandler currentPlayer() {
+        return this.currentPlayer;
+    }
 
     private List<Move> calculateLegalMoves(final List<ChessPiece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();
         for (final ChessPiece piece : pieces) {
             legalMoves.addAll(piece.LegalMovesList(this));
         }
-        return ImmutableList.copyOf(legalMoves);
+        return Collections.unmodifiableList(legalMoves);
     }
 
     private static List<ChessPiece> calculateActivePieces(final List<Tile> gameBoard, final Player playerColor) {
@@ -54,7 +78,7 @@ public class Board {
                 }
             }
         }
-        return ImmutableList.copyOf(activePieces);
+        return Collections.unmodifiableList(activePieces);
     }
 
     public Tile getTile(final int tileCoordinate) {
@@ -104,19 +128,26 @@ public class Board {
         return builder.build();
     }
 
+    public List<Move> getAllLegalMoves() {
+        final List<Move> allLegalMoves = new ArrayList<>();
+        allLegalMoves.addAll(this.whitePlayerController.getLegalMoves());
+        allLegalMoves.addAll(this.blackPlayerController.getLegalMoves());
+        return Collections.unmodifiableList(allLegalMoves);
+    }
+
     private static List<Tile> createGameBoard(final Builder builder) {
         final Tile[] tiles = new Tile[BoardUtil.NumTiles];
         for (int i = 0; i < BoardUtil.NumTiles; i++) {
 
             tiles[i] = Tile.createTile(i, builder.boardConfig.get(i));
         }
-        return ImmutableList.copyOf(tiles);
+        return Collections.unmodifiableList(tiles);
     }
 
     public static class Builder {
         Map<Integer, ChessPiece> boardConfig;
-        
         Player nextMoveMaker;
+        PawnHandler enPassantPawn;
         public Builder(){
             this.boardConfig = new HashMap<>();
         }
@@ -133,6 +164,10 @@ public class Board {
         
         public Board build() {
             return new Board(this);
+        }
+
+        public void setEnPassantPawn(PawnHandler movedPawn) {
+            this.enPassantPawn = movedPawn;
         }
 
     }

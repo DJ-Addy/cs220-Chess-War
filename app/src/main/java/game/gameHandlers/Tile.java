@@ -27,6 +27,10 @@ public abstract class Tile {
 
     public abstract ChessPiece getPiece();
 
+    public int getTileCoordinate() {
+        return this.tileCoordinate;
+    }
+
     public static final class EmptyTile extends Tile {
         private EmptyTile(int coordinate) {
             super(coordinate);
