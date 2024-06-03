@@ -53,13 +53,39 @@ public class App extends Application
 
         root.getChildren().add(createMenuBar());
 
+
+        // loosely based on https://stackoverflow.com/questions/69339314/how-can-i-draw-over-a-gridpane-of-rectangles-with-an-image-javafx
+        startGame();
+        // set the scene
+        updateBoard(ChessBoard);
+
+        // don't give a width or height to the scene
+        // it will figure it out because there's a menu bar
+        // plus each square is a fixed size
+        Scene scene = new Scene(root);
+
+        // add style information
+        URL styleURL = getClass().getResource("/style.css");
+        String stylesheet = styleURL.toExternalForm();
+        scene.getStylesheets().add(stylesheet);
+
+        // set title and scene and show to the user
+        primaryStage.setTitle("CHESS WAR");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // handler for when we click the close button
+        primaryStage.setOnCloseRequest(event -> {
+            System.out.println("oncloserequest");
+        });
+
+    }
+    public void startGame(){
         GridPane gridPane = new GridPane();
         // preferred size of the gridpane
         gridPane.setPrefSize(SQUARE_SIZE * 8, SQUARE_SIZE * 8);
         
         root.getChildren().add(gridPane);
-
-        // loosely based on https://stackoverflow.com/questions/69339314/how-can-i-draw-over-a-gridpane-of-rectangles-with-an-image-javafx
         for (int row = 0; row < SIZE; row++)
         {
             for (int col = 0; col < SIZE; col++)
@@ -94,30 +120,6 @@ public class App extends Application
                 gridPane.add(cell, col, row);
             }
         }
-
-        // set the scene
-        updateBoard(ChessBoard);
-
-        // don't give a width or height to the scene
-        // it will figure it out because there's a menu bar
-        // plus each square is a fixed size
-        Scene scene = new Scene(root);
-
-        // add style information
-        URL styleURL = getClass().getResource("/style.css");
-        String stylesheet = styleURL.toExternalForm();
-        scene.getStylesheets().add(stylesheet);
-
-        // set title and scene and show to the user
-        primaryStage.setTitle("CHESS WAR");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        // handler for when we click the close button
-        primaryStage.setOnCloseRequest(event -> {
-            System.out.println("oncloserequest");
-        });
-
     }
 
     private void clearBoard()
@@ -134,7 +136,7 @@ public class App extends Application
     public void updateBoard(Board board){
         clearBoard();
         Tilepieces(board);
-        System.out.println("Board updated.");
+        System.out.println(board.toString());
     }
 
     private void setKeyboardHandler()
@@ -241,8 +243,7 @@ public class App extends Application
         clearBoard();
         for(int i = 0; i < BoardUtil.NumTiles; i++){
             if(board.getTile(i).isTileOccupied()){
-                PieceType pieceType = board.getTile(i).getPiece().getPieceType();
-                placePieceImage(board.getTile(i).getPiece().getPiecePlayer(), pieceType, i);
+                placePieceImage(board.getTile(i).getPiece().getPiecePlayer(), board.getTile(i).getPiece().getPieceType(), i);
                 
             }
         }
