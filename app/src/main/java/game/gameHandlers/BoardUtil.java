@@ -9,8 +9,14 @@ public class BoardUtil {
     public static final boolean[] SecondColumn = initColumn(1);
     public static final boolean[] SeventhColumn = initColumn(6);
     public static final boolean[] EigthColumn = initColumn(7);
-    public static final boolean[] SecondRow = initRow(8);
-    public static final boolean[] SeventhRow = initRow(48);
+    public static final boolean[] EightRank = initRow(0);
+    public static final boolean[] SeventhRank = initRow(8);
+    public static final boolean[] SixthRank = initRow(16);
+    public static final boolean[] FifthRank = initRow(24);
+    public static final boolean[] FourthRank = initRow(32);
+    public static final boolean[] ThirdRank = initRow(40);
+    public static final boolean[] SecondRank = initRow(48);
+    public static final boolean[] FirstRank = initRow(56);
 
     private BoardUtil() {
         throw new RuntimeException("You cannot instantiate me!");

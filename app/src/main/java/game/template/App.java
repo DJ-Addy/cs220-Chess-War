@@ -4,8 +4,10 @@
 package template;
 
 import java.net.URL;
-import gameHandlers.Board;
-import gameHandlers.BoardUtil;
+
+import gameHandlers.*;
+import gameHandlers.ChessPiece.PieceType;
+import playerController.*;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -32,6 +34,13 @@ public class App extends Application
     // size of the squares in the css file
     private static final int SQUARE_SIZE = 70;
     private VBox root;
+    private Board ChessBoard = Board.createStandardBoard();
+    private final String boardString = ChessBoard.toString();
+    //beforeTile to see which piece is being moved
+    private Tile beforeTile;
+    //afterTile to see where the piece is being moved to
+    private Tile afterTile;
+    private ChessPiece movedPiece;
     // using StackPane so that they can hold a rectangle and an image
     // we use the rectangle to color the squares
     // and the image to place the pieces
@@ -79,10 +88,15 @@ public class App extends Application
                 // make each cell clickable
                 cell.setOnMouseClicked(event -> handleMouseClick(event, r, c));
 
+                //Send out updated board to stackpane
+
                 // finally, put the stackpane into the gridpane
                 gridPane.add(cell, col, row);
             }
         }
+
+        // set the scene
+        updateBoard(ChessBoard);
 
         // don't give a width or height to the scene
         // it will figure it out because there's a menu bar
@@ -117,6 +131,11 @@ public class App extends Application
             }
         }
     }
+    public void updateBoard(Board board){
+        clearBoard();
+        Tilepieces(board);
+        System.out.println("Board updated.");
+    }
 
     private void setKeyboardHandler()
     {
@@ -141,51 +160,102 @@ public class App extends Application
             }
         });
     }
-
-    private void handleMouseClick(MouseEvent event, int row, int col)
-    {
+    private void handleMouseClick(MouseEvent event, int row, int col) {
         System.out.println("Mouse clicked on " + row + ", " + col);
 
-        // I'm just showing off that you can do this
-        // the proper way to do this is to have a model class
-        // similar to the Board class in Sudoku
-        // and then ask the model what piece is at this row/col
-        grid[row][col].getChildren().forEach(child -> {
-            if (child instanceof ImageView)
-            {
-                String url = ((ImageView) child).getImage().getUrl();
-                String piece = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.'));
+        int index = row * BoardUtil.NumTilesPerRow + col;
 
-                System.out.println("Image found for piece " + piece);
+        if (beforeTile == null) {
+            beforeTile = ChessBoard.getTile(index);
+            movedPiece = beforeTile.getPiece();
+            if (movedPiece == null) {
+                beforeTile = null;
             }
-        });
+        } else {
+            afterTile = ChessBoard.getTile(index);
+            Move move = Move.MoveFactory.createMove(ChessBoard, beforeTile.getTileCoordinate(), afterTile.getTileCoordinate());
+            MoveDriver transition = ChessBoard.currentPlayer().makeMove(move);
+            if (transition.getMoveStatus().isDone()) {
+                ChessBoard = transition.getTransitionBoard();
+                updateBoard(ChessBoard); // Update the board after a successful move
+            }
+            beforeTile = null;
+            afterTile = null;
+            movedPiece = null;
+        }
     }
 
-    // private void placePiece(Player player, ChessPiece piece, int row, int col)
-    // {
-    //     String imageName = "";
-    //     if (){
-    //         imageName = "w" + piece.toString().toLowerCase() + ".png";
-    //     }
-    //     else
-    //     {
-    //         imageName = "b" + piece.toString().toLowerCase() + ".png";
-    //     }
-    //     ImageView image = loadImage(imageName);
-    //     // add the image to the cell
-    //     // each cell is stack pane so that we can "stack" the piece
-    //     // on top of the rectangle for the square
-    //     grid[row][col].getChildren().add(image);
-    //     // not sure if any of this was necessary; commenting it out didn't seem to matter
-    //     image.setFitWidth(SQUARE_SIZE);
-    //     image.setFitHeight(SQUARE_SIZE);
-    //     //image.fitWidthProperty().bind(grid[row][col].widthProperty().subtract(2));
-    //     //image.fitHeightProperty().bind(grid[row][col].heightProperty().subtract(2));
-    // }
+    //generate a PlacePieceImage method that will place the pieces on the board, using the Board class, and the PieceType enum, and the Player enum, and the loadImage method
+    // this is the method that will be called when we want to place a piece on the board
+
+    private void placePieceImage(Player player, PieceType piece, int piecePosition)
+    {
+        final int row = piecePosition / 8;
+        final int col = piecePosition % 8;
+        String imageName = "";
+        if (!player.equals(Player.WHITE) && !player.equals(Player.BLACK)) {
+            throw new IllegalArgumentException("Player must be either white or black");
+        }
+        switch(piece.toString()){
+            case "P":
+                imageName = "pawn.png";
+                break;
+            case "R":
+                imageName = "rook.png";
+                break;
+            case "N":
+                imageName = "knight.png";
+                break;
+            case "B":
+                imageName = "bishop.png";
+                break;
+            case "Q":
+                imageName = "queen.png";
+                break;
+            case "K":
+                imageName = "king.png";
+                break;
+            default:
+                throw new IllegalArgumentException("Piece must be a valid chess piece");
+        }
+        String pngfile = "";
+        if (player == Player.WHITE) {
+            pngfile = "w" + imageName;
+        } else {
+            pngfile = "b" + imageName;
+        }
+    
+        ImageView image = loadImage(pngfile);
+        // add the image to the cell
+        // each cell is stack pane so that we can "stack" the piece
+        // on top of the rectangle for the square
+        grid[row][col].getChildren().add(image);
+        // not sure if any of this was necessary; commenting it out didn't seem to matter
+        image.setFitWidth(SQUARE_SIZE);
+        image.setFitHeight(SQUARE_SIZE);
+        //image.fitWidthProperty().bind(grid[row][col].widthProperty().subtract(2));
+        //image.fitHeightProperty().bind(grid[row][col].heightProperty().subtract(2));
+    }
+
+    private void Tilepieces(final Board board){
+        clearBoard();
+        for(int i = 0; i < BoardUtil.NumTiles; i++){
+            if(board.getTile(i).isTileOccupied()){
+                PieceType pieceType = board.getTile(i).getPiece().getPieceType();
+                placePieceImage(board.getTile(i).getPiece().getPiecePlayer(), pieceType, i);
+                
+            }
+        }
+
+    }
 
     private ImageView loadImage(String name)
     {
-        return new ImageView(getClass().getResource("/assets/" + name).toExternalForm());
+        URL imageUrl = getClass().getResource("/assets/" + name);
+    if (imageUrl == null) {
+        throw new IllegalArgumentException("Image resource not found: " + name);
+    }
+    return new ImageView(imageUrl.toExternalForm());
     }
 
     private MenuBar createMenuBar()
@@ -202,8 +272,9 @@ public class App extends Application
             System.out.println("Load from file");
         });
 
-        addMenuItem(fileMenu, "board1", () -> {
-            
+        addMenuItem(fileMenu, "Load Board PGN Format", () -> {
+            //open that file
+            System.out.println("opening from file");
         });
 
         addMenuItem(fileMenu, "board2", () -> {
@@ -225,8 +296,8 @@ public class App extends Application
 
     public static void main(String[] args) 
     {
-        // launch(args);
-        Board board = Board.createStandardBoard();
-        System.out.println(board);
+        launch(args);
     }
+
 }
+

@@ -5,6 +5,11 @@ import com.google.common.collect.ImmutableMap;
 public abstract class Tile {
    final int tileCoordinate;
 
+   Tile(final int tileCoordinate) {
+    this.tileCoordinate = tileCoordinate;
+    }
+   
+
    private static final Map<Integer, EmptyTile> EmptyTileCache = createAllPossibleEmptyTiles();
 
     private static Map<Integer, EmptyTile> createAllPossibleEmptyTiles() {
@@ -18,9 +23,6 @@ public abstract class Tile {
 
     public static Tile createTile(final int tileCoordinate, final ChessPiece piece) {
         return piece != null ? new OccupiedTile(tileCoordinate, piece) : EmptyTileCache.get(tileCoordinate);
-    }
-    private Tile(final int tileCoordinate) {
-        this.tileCoordinate = tileCoordinate;
     }
 
     public abstract boolean isTileOccupied();

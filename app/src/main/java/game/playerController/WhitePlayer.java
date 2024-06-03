@@ -1,16 +1,12 @@
 package playerController;
 
 import java.util.*;
-import gameHandlers.Move.*;
-import gameHandlers.Board;
-import gameHandlers.Board.*;
-import gameHandlers.ChessPiece.*;
-import gameHandlers.KingHandler;
-import gameHandlers.Move;
 import gameHandlers.Player;
-import gameHandlers.QueenHandler;
+import gameHandlers.Board;
+import gameHandlers.Move;
+import gameHandlers.ChessPiece;
 import gameHandlers.RookHandler;
-import gameHandlers.Tile.*;
+import gameHandlers.Tile;
 
 public class WhitePlayer extends PlayerHandler {
     public WhitePlayer(final Board board, final List<Move> whiteStandardLegalMoves, final List<Move> blackStandardLegalMoves) {
@@ -28,7 +24,7 @@ public class WhitePlayer extends PlayerHandler {
     }
 
     @Override
-    public Player getOpponent() {
+    public PlayerHandler getOpponent() {
         return this.board.blackPlayer();
     }
 
@@ -39,7 +35,7 @@ public class WhitePlayer extends PlayerHandler {
         if(this.playerKing.isFirstMove() && !this.isInCheck()){
             //whites king side castle
             if(this.board.getTile(61).isTileOccupied() && this.board.getTile(62).isTileOccupied()){
-                final ChessPiece rookTile = this.board.getTile(63);
+                final Tile rookTile = this.board.getTile(63);
                 if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
                         if(PlayerHandler.calculateAttacksOnTile(61, opponentsLegals).isEmpty() &&
                            PlayerHandler.calculateAttacksOnTile(62, opponentsLegals).isEmpty() && 
@@ -51,8 +47,11 @@ public class WhitePlayer extends PlayerHandler {
                 }
             }
             if(!this.board.getTile(59).isTileOccupied() && !this.board.getTile(58).isTileOccupied() && !this.board.getTile(57).isTileOccupied()){
-                final ChessPiece rookTile = this.board.getTile(56);
-                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
+                final Tile rookTile = this.board.getTile(56);
+                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove() &&
+                PlayerHandler.calculateAttacksOnTile(58, opponentsLegals).isEmpty() &&
+                PlayerHandler.calculateAttacksOnTile(59, opponentsLegals).isEmpty() &&
+                rookTile.getPiece().getPieceType().isRook()){
                     kingCastles.add(new Move.QueenSideCastleMove(this.board, this.playerKing, 58,
                                      (RookHandler)rookTile.getPiece(), rookTile.getTileCoordinate(), 59));
                 }
@@ -61,7 +60,7 @@ public class WhitePlayer extends PlayerHandler {
 
 
 
-        return Collections.unmodifiableList(kingCastles);
+        return kingCastles;
 
         }
 }

@@ -1,12 +1,6 @@
 package playerController;
 import java.util.*;
-import gameHandlers.Move.*;
-import gameHandlers.Board;
-import gameHandlers.Board.*;
-import gameHandlers.ChessPiece;
-import gameHandlers.KingHandler;
-import gameHandlers.Move;
-import gameHandlers.Player;
+import gameHandlers.*;
 
 public abstract class PlayerHandler {
     final Board board;
@@ -94,13 +88,13 @@ public abstract class PlayerHandler {
         
         //if the king can be attacked after the move, then the move is illegal, ei bishop pinned a knight to the king the knight moves and the king is in check which is illegal
         if(!kingAttacks.isEmpty()){
-            return new MoveDriver(this.board, move, MoveStatus.LeavesPlayerInCheck);
+            return new MoveDriver(this.board, move, MoveStatus.LeavingPlayerInCheck);
         }
         return new MoveDriver(this.board, move, MoveStatus.Done);
     }
 
     public abstract List<ChessPiece> getActivePieces();
     public abstract Player getPlayerColor();
-    public abstract Player getOpponent();
+    public abstract PlayerHandler getOpponent();
     protected abstract List<Move> calculateKingCastles(List<Move> playerLegalMoves, List<Move> opponentLegalMoves);
 }

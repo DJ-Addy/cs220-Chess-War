@@ -1,7 +1,7 @@
 package gameHandlers;
 import java.util.*;
 
-import playerController.PlayerHandler.*;
+import playerController.PlayerHandler;
 import playerController.WhitePlayer;
 import playerController.BlackPlayer;
 
@@ -25,8 +25,8 @@ public enum Player
         return false;
         }
     @Override
-    public PlayerHandler choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer) {
-        return whitePlayer;
+    public PlayerHandler choosePlayer(WhitePlayer whitePlayerController, BlackPlayer blackPlayerController) {
+        return whitePlayerController;
         }
     },
     BLACK {
@@ -46,12 +46,12 @@ public enum Player
         return true;
         }
     @Override
-    public PlayerHandler choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer) {
-        return blackPlayer;
+    public PlayerHandler choosePlayer(WhitePlayer whitePlayerController, BlackPlayer blackPlayerController) {
+        return blackPlayerController;
         }
     };
     public abstract int getDirection();
     public abstract boolean isWhite();
     public abstract boolean isBlack();
-    public abstract PlayerHandler choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer);
+    public abstract PlayerHandler choosePlayer(final WhitePlayer whitePlayerController, final BlackPlayer blackPlayerController);
 }

@@ -29,9 +29,9 @@ public class PawnHandler extends ChessPiece{
         if(currentCandidate == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
                 legalMoves.add(new DevelopingMove(board, this, candidateDestinationCoordinate));
         }else if(currentCandidate == 16 && this.isFirstMove() && 
-            (BoardUtil.SecondRow[this.piecePosition]&& 
+            (BoardUtil.SeventhRank[this.piecePosition]&& 
             this.getPiecePlayer().isBlack())|| 
-            (BoardUtil.SeventhRow[this.piecePosition]&& 
+            (BoardUtil.SecondRank[this.piecePosition]&& 
             this.getPiecePlayer().isWhite())) {
                 final int behindCandidateDestinationCoordinate = this.piecePosition + (this.getPiecePlayer().getDirection() * 8);
                 if(!board.getTile(behindCandidateDestinationCoordinate).isTileOccupied() && 

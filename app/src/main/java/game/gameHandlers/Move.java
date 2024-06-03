@@ -1,11 +1,11 @@
 package gameHandlers;
 import java.util.*;
-import gameHandlers.Board.*;
+import gameHandlers.Board.Builder;
 
 public abstract class Move {
     
     final Board board;
-    final ChessPiece movedPiece;
+    protected final ChessPiece movedPiece;
     final int destinationCoordinate;
 
     public static final Move InvalidMover = new InvalidMove();
@@ -74,7 +74,7 @@ public abstract class Move {
     public Board execute()
     {
         //we arent going to mutuate a existing board but create a whole new board with the new move
-        final Board.Builder builder = new Board.Builder();
+        final Builder builder = new Builder();
         //iterate through all the active pieces of the current player
         for(final ChessPiece piece : this.board.currentPlayer().getActivePieces())
         {
@@ -158,9 +158,8 @@ public abstract class Move {
     }
 
 
-    public static class PawnAttackMove extends Move
+    public static class PawnAttackMove extends AttackMove
     {
-        final ChessPiece attackedPiece;
 
         public PawnAttackMove(final Board board, final ChessPiece movedPiece, final int destinationCoordinate, final ChessPiece attackedPiece)
         {
@@ -170,9 +169,9 @@ public abstract class Move {
 
     public static final class PawnEnPassantAttackMove extends PawnAttackMove
     {
-        public PawnEnPassantAttackMove(final Board board, final ChessPiece movedPiece, final int destinationCoordinate)
+        public PawnEnPassantAttackMove(final Board board, final ChessPiece movedPiece, final int destinationCoordinate,final ChessPiece attackedPiece)
         {
-            super(board, movedPiece, destinationCoordinate);
+            super(board, movedPiece, destinationCoordinate, attackedPiece);
         }
     }
 
@@ -186,7 +185,7 @@ public abstract class Move {
         @Override
         public Board execute()
         {
-            final Board.Builder builder = new Board.Builder();
+            final Builder builder = new Builder();
             for(final ChessPiece piece : this.board.currentPlayer().getActivePieces())
             {
                 if(!this.movedPiece.equals(piece))
@@ -198,7 +197,7 @@ public abstract class Move {
             {
                 builder.setPiece(piece);
             }
-            final Pawn movedPawn = (Pawn) this.movedPiece.movePiece.movePiece(this);
+            final PawnHandler movedPawn = (PawnHandler) this.movedPiece.movePiece(this);
             //enpassent pawn can jump which is why we need the setEnPassantPawn method
             builder.setPiece(movedPawn);
             builder.setEnPassantPawn(movedPawn);
@@ -209,7 +208,7 @@ public abstract class Move {
 
     public static abstract class CastleMove extends Move
     {
-        protected final Rook castleRook;
+        protected final RookHandler castleRook;
         protected final int castleRookStartPos;
         protected final int castleRookDestinationPos;
         public CastleMove(final Board board, final ChessPiece movedPiece, final int destinationCoordinate, 
@@ -221,7 +220,7 @@ public abstract class Move {
             this.castleRookDestinationPos = castleRookDestinationPos;
         }
 
-        public Rook getCastleRook()
+        public RookHandler getCastleRook()
         {
             return this.castleRook;
         }
@@ -235,7 +234,7 @@ public abstract class Move {
         @Override
         public Board execute(){
 
-            final Board.Builder builder = new Board.Builder();
+            final Builder builder = new Builder();
             for(final ChessPiece piece : this.board.currentPlayer().getActivePieces())
             {
                 if(!this.movedPiece.equals(piece) && !this.castleRook.equals(piece))
@@ -249,7 +248,7 @@ public abstract class Move {
             }
             builder.setPiece(this.movedPiece.movePiece(this));
             //TODO look into the first move on normal pieces
-            builder.setPiece(new RookHandler(this.castleRookDestinationPos, this.castleRook.getPiecePlayer(), false));
+            builder.setPiece(new RookHandler(this.castleRookDestinationPos, this.castleRook.getPiecePlayer()));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getPlayerColor());
             return builder.build();
         }
@@ -299,11 +298,12 @@ public abstract class Move {
         }
     }
 
-    public static class MoveFactory{
-        prviate MoveFactory()
-        {
+    public static class MoveFactory 
+    {
+        private MoveFactory() {
             throw new RuntimeException("you cannot instantiate this class");
         }
+
         public static Move createMove(final Board board, final int currentCoordinate, final int destinationCoordinate)
         {
             for(final Move move : board.getAllLegalMoves())

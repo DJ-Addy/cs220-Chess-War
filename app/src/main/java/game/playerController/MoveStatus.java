@@ -4,21 +4,21 @@ public enum MoveStatus {
     
     Done {
         @Override
-        boolean isDone() {
+        public boolean isDone() {
             return true;
         }
     },
     IllegalMove {
         @Override
-        boolean isDone() {
+        public boolean isDone() {
             return false;
         }
     },
     LeavingPlayerInCheck {
         @Override
-        boolean isDone() {
+        public boolean isDone() {
             return false;
         }
     };
-    abstract boolean isDone();
+   public abstract boolean isDone();
 }

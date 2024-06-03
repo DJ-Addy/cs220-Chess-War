@@ -1,5 +1,6 @@
 package gameHandlers;
 import java.util.*;
+import gameHandlers.ChessPiece;
 import playerController.PlayerHandler;
 import playerController.BlackPlayer;
 import playerController.WhitePlayer;
@@ -10,11 +11,11 @@ public class Board {
     private final List<Tile> gameBoard;
     private final List<ChessPiece> whitePieces;
     private final List<ChessPiece> blackPieces;
-    private final PlayerHandler currentPlayer;
 
     //implement players classes 
     private final WhitePlayer whitePlayerController;
     private final BlackPlayer blackPlayerController;
+    private final PlayerHandler currentPlayer;
 
     private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
@@ -48,24 +49,25 @@ public class Board {
         return this.blackPieces;
     }
 
-    public PlayerHandler whitePlayer() {
+    public WhitePlayer whitePlayer() {
         return this.whitePlayerController;
     }
 
-    public PlayerHandler blackPlayer() {
+    public BlackPlayer blackPlayer() {
         return this.blackPlayerController;
     }
 
     public PlayerHandler currentPlayer() {
         return this.currentPlayer;
     }
+    
 
     private List<Move> calculateLegalMoves(final List<ChessPiece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();
         for (final ChessPiece piece : pieces) {
             legalMoves.addAll(piece.LegalMovesList(this));
         }
-        return Collections.unmodifiableList(legalMoves);
+        return legalMoves;
     }
 
     private static List<ChessPiece> calculateActivePieces(final List<Tile> gameBoard, final Player playerColor) {
@@ -141,7 +143,7 @@ public class Board {
 
             tiles[i] = Tile.createTile(i, builder.boardConfig.get(i));
         }
-        return Collections.unmodifiableList(tiles);
+        return Arrays.asList(tiles);
     }
 
     public static class Builder {
