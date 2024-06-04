@@ -8,6 +8,8 @@ import java.net.URL;
 import gameHandlers.*;
 import gameHandlers.ChessPiece.PieceType;
 import playerController.*;
+import gameHandlers.Board;
+import gameHandlers.BoardUtil;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -55,7 +57,7 @@ public class App extends Application
 
 
         // loosely based on https://stackoverflow.com/questions/69339314/how-can-i-draw-over-a-gridpane-of-rectangles-with-an-image-javafx
-        startGame();
+        drawBoard(ChessBoard);
         // set the scene
         updateBoard(ChessBoard);
 
@@ -80,12 +82,14 @@ public class App extends Application
         });
 
     }
-    public void startGame(){
+
+    public void drawBoard(Board board){
         GridPane gridPane = new GridPane();
         // preferred size of the gridpane
         gridPane.setPrefSize(SQUARE_SIZE * 8, SQUARE_SIZE * 8);
         
         root.getChildren().add(gridPane);
+        // create the squares
         for (int row = 0; row < SIZE; row++)
         {
             for (int col = 0; col < SIZE; col++)
@@ -120,6 +124,7 @@ public class App extends Application
                 gridPane.add(cell, col, row);
             }
         }
+
     }
 
     private void clearBoard()
@@ -134,7 +139,6 @@ public class App extends Application
         }
     }
     public void updateBoard(Board board){
-        clearBoard();
         Tilepieces(board);
         System.out.println(board.toString());
     }
@@ -164,21 +168,22 @@ public class App extends Application
     }
     private void handleMouseClick(MouseEvent event, int row, int col) {
         System.out.println("Mouse clicked on " + row + ", " + col);
-
-        int index = row * BoardUtil.NumTilesPerRow + col;
+        int index = BoardUtil.getCoordinateAtPosition(row, col);
 
         if (beforeTile == null) {
-            beforeTile = ChessBoard.getTile(index);
+            beforeTile = ChessBoard.getTile(BoardUtil.getCoordinateAtPosition(row, col));
             movedPiece = beforeTile.getPiece();
             if (movedPiece == null) {
                 beforeTile = null;
             }
         } else {
-            afterTile = ChessBoard.getTile(index);
+            afterTile = ChessBoard.getTile(BoardUtil.getCoordinateAtPosition(row, col));
             Move move = Move.MoveFactory.createMove(ChessBoard, beforeTile.getTileCoordinate(), afterTile.getTileCoordinate());
             MoveDriver transition = ChessBoard.currentPlayer().makeMove(move);
             if (transition.getMoveStatus().isDone()) {
                 ChessBoard = transition.getTransitionBoard();
+                
+                grid[BoardUtil.getXPositionAtCoordinate(afterTile.getTileCoordinate())][BoardUtil.getYPositionAtCoordinate(afterTile.getTileCoordinate())].getChildren().removeIf(child -> child instanceof ImageView);
                 updateBoard(ChessBoard); // Update the board after a successful move
             }
             beforeTile = null;
@@ -192,8 +197,9 @@ public class App extends Application
 
     private void placePieceImage(Player player, PieceType piece, int piecePosition)
     {
-        final int row = piecePosition / 8;
-        final int col = piecePosition % 8;
+        int row = BoardUtil.getXPositionAtCoordinate(piecePosition);
+        int col = BoardUtil.getYPositionAtCoordinate(piecePosition);
+        
         String imageName = "";
         if (!player.equals(Player.WHITE) && !player.equals(Player.BLACK)) {
             throw new IllegalArgumentException("Player must be either white or black");

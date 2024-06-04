@@ -19,10 +19,10 @@ public class Board {
 
     private Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
-        this.whitePieces = calculateActivePieces(this.gameBoard, Player.WHITE);
-        this.blackPieces = calculateActivePieces(this.gameBoard, Player.BLACK);
-        final List<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
-        final List<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
+        this.whitePieces = ActivePiecesCalc(this.gameBoard, Player.WHITE);
+        this.blackPieces = ActivePiecesCalc(this.gameBoard, Player.BLACK);
+        final List<Move> whiteStandardLegalMoves = LegalMoveCalc(this.whitePieces);
+        final List<Move> blackStandardLegalMoves = LegalMoveCalc(this.blackPieces);
 
         this.whitePlayerController = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayerController = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
@@ -62,7 +62,7 @@ public class Board {
     }
     
 
-    private List<Move> calculateLegalMoves(final List<ChessPiece> pieces) {
+    private List<Move> LegalMoveCalc(final List<ChessPiece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();
         for (final ChessPiece piece : pieces) {
             legalMoves.addAll(piece.LegalMovesList(this));
@@ -70,7 +70,7 @@ public class Board {
         return legalMoves;
     }
 
-    private static List<ChessPiece> calculateActivePieces(final List<Tile> gameBoard, final Player playerColor) {
+    private static List<ChessPiece> ActivePiecesCalc(final List<Tile> gameBoard, final Player playerColor) {
         final List<ChessPiece> activePieces = new ArrayList<>();
         for (final Tile tile : gameBoard) {
             if(tile.isTileOccupied()) {

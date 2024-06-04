@@ -47,6 +47,18 @@ public class BoardUtil {
         return row;
     }
 
+    public static int getCoordinateAtPosition(final int x, final int y) {
+        return x + NumTilesPerRow * y;
+    }
+
+    public static int getXPositionAtCoordinate(final int coordinate) {
+        return coordinate % NumTilesPerRow;
+    }
+
+    public static int getYPositionAtCoordinate(final int coordinate) {
+        return coordinate / NumTilesPerRow;
+    }
+
 
     public static boolean isValidTile(final int candidateDestinationCoordinate) {
         return candidateDestinationCoordinate >= 0 && candidateDestinationCoordinate < 64;
