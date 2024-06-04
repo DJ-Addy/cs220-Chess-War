@@ -25,7 +25,7 @@ public enum Player
         return false;
         }
     @Override
-    public PlayerHandler choosePlayer(WhitePlayer whitePlayerController, BlackPlayer blackPlayerController) {
+    public WhitePlayer choosePlayer(WhitePlayer whitePlayerController, BlackPlayer blackPlayerController) {
         return whitePlayerController;
         }
     },
@@ -46,7 +46,7 @@ public enum Player
         return true;
         }
     @Override
-    public PlayerHandler choosePlayer(WhitePlayer whitePlayerController, BlackPlayer blackPlayerController) {
+    public BlackPlayer choosePlayer(WhitePlayer whitePlayerController, BlackPlayer blackPlayerController) {
         return blackPlayerController;
         }
     };
